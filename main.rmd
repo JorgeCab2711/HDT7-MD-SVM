@@ -236,3 +236,143 @@ accuracycm5<- c(cmR1,cmR2,cmR3)
 accuracycm6<- c(cmP1,cmP2,cmP3)
 data <- data.frame(tiposvmcm, accuracycm1, accuracycm2, accuracycm3)
 ```
+
+#7 Evaluación del primer modelo, para saber si tiene sobreajuste o no
+```{r}
+# Definir la función evaluarModelo
+evaluarModelo <- function(modelo, train, test) {
+  # Ajustar el modelo en el conjunto de entrenamiento
+  fit <- modelo
+  
+  # Calcular el rendimiento en el conjunto de entrenamiento
+  predTrain <- predict(fit, train)
+  accTrain <- sum(predTrain == train$tipoDeCasa)/nrow(train)
+  
+  # Calcular el rendimiento en el conjunto de prueba
+  predTest <- predict(fit, test)
+  accTest <- sum(predTest == test$tipoDeCasa)/nrow(test)
+  
+  # Imprimir los rendimientos
+  cat("Accuracy en entrenamiento:", accTrain, "\n")
+  cat("Accuracy en prueba:", accTest, "\n")
+  
+  # Comparar los rendimientos para determinar si hay sobreajuste
+  if(accTrain - accTest > 0.1) {
+    cat("El modelo tiene sobreajuste\n")
+  } else {
+    cat("El modelo no tiene sobreajuste\n")
+  }
+  
+  # Devolver el modelo ajustado y los rendimientos
+  return(list(modelo = fit, trainAcc = accTrain, testAcc = accTest))
+}
+
+# Evaluar el modelo SVM L1
+resultadosL1 <- evaluarModelo(modeloSVM_L1, train, test)
+
+# Evaluar el modelo SVM L2
+resultadosL2 <- evaluarModelo(modeloSVM_L2, train, test)
+
+# Evaluar el modelo SVM L3
+resultadosL3 <- evaluarModelo(modeloSVM_L3, train, test)
+
+```
+
+
+#7 Evaluacion del modelo 2, si tiene sobreajuste o no
+
+```{r}
+# Definir la función evaluarModelo
+evaluarModelo <- function(modelo, train, test) {
+  # Ajustar el modelo en el conjunto de entrenamiento
+  fit <- modelo
+  
+  # Calcular el rendimiento en el conjunto de entrenamiento
+  predTrain <- predict(fit, train)
+  accTrain <- sum(predTrain == train$tipoDeCasa)/nrow(train)
+  
+  # Calcular el rendimiento en el conjunto de prueba
+  predTest <- predict(fit, test)
+  accTest <- sum(predTest == test$tipoDeCasa)/nrow(test)
+  
+  # Imprimir los rendimientos
+  cat("Accuracy en entrenamiento:", accTrain, "\n")
+  cat("Accuracy en prueba:", accTest, "\n")
+  
+  # Comparar los rendimientos para determinar si hay sobreajuste
+  if(accTrain - accTest > 0.1) {
+    cat("El modelo tiene sobreajuste\n")
+  } else {
+    cat("El modelo no tiene sobreajuste\n")
+  }
+  
+  # Devolver el modelo ajustado y los rendimientos
+  return(list(modelo = fit, trainAcc = accTrain, testAcc = accTest))
+}
+
+# Evaluar el modelo SVM L1
+resultadosR1 <- evaluarModelo(modeloSVM_R1, train, test)
+
+# Evaluar el modelo SVM L2
+resultadosR2 <- evaluarModelo(modeloSVM_R2, train, test)
+
+# Evaluar el modelo SVM L3
+resultadosR3 <- evaluarModelo(modeloSVM_R3, train, test)
+```
+
+#7 Evaluacion del modelo 3, si tiene sobreajuste o no
+
+```{r}
+# Definir la función evaluarModelo
+evaluarModelo <- function(modelo, train, test) {
+  # Ajustar el modelo en el conjunto de entrenamiento
+  fit <- modelo
+  
+  # Calcular el rendimiento en el conjunto de entrenamiento
+  predTrain <- predict(fit, train)
+  accTrain <- sum(predTrain == train$tipoDeCasa)/nrow(train)
+  
+  # Calcular el rendimiento en el conjunto de prueba
+  predTest <- predict(fit, test)
+  accTest <- sum(predTest == test$tipoDeCasa)/nrow(test)
+  
+  # Imprimir los rendimientos
+  cat("Accuracy en entrenamiento:", accTrain, "\n")
+  cat("Accuracy en prueba:", accTest, "\n")
+  
+  # Comparar los rendimientos para determinar si hay sobreajuste
+  if(accTrain - accTest > 0.1) {
+    cat("El modelo tiene sobreajuste\n")
+  } else {
+    cat("El modelo no tiene sobreajuste\n")
+  }
+  
+  # Devolver el modelo ajustado y los rendimientos
+  return(list(modelo = fit, trainAcc = accTrain, testAcc = accTest))
+}
+
+# Evaluar el modelo SVM L1
+resultadosP1 <- evaluarModelo(modeloSVM_P1, train, test)
+
+# Evaluar el modelo SVM L2
+resultadosP2 <- evaluarModelo(modeloSVM_P2, train, test)
+
+# Evaluar el modelo SVM L3
+resultadosP3 <- evaluarModelo(modeloSVM_P3, train, test)
+```
+
+Para poder manejar el sobreajuste, se puede implementar la técnica de la validación cruzada la cual es utilizada para evaluar la capacidad predictiva de un modelo y seleccionar el mejor.  Se divide el conjunto de datos en múltiples subconjuntos de entrenamiento y prueba y se ajusta el modelo en cada subconjunto de entrenamiento y se evalúa en el subconjunto de prueba. Esto ayuda a identificar el sobreajuste y seleccionar el modelo que tenga el mejor rendimiento en el conjunto de prueba.
+
+
+#8. Compare los resultados obtenidos con los diferentes modelos que hizo en cuanto a
+efectividad, tiempo de procesamiento y equivocaciones (donde el algoritmo se equivocó
+más, donde se equivocó menos y la importancia que tienen los errores).
+
+En los modelos que se ejecutaron para Linear el mejor modelo fue el 3, el cual tenía mejor accuracy.
+En los modelos radiales el mejor modelo fue el 3. el cual tenía mejor accuracy en prueba.
+
+Y por último en el modelo Polinomial el mejor modelo fue el 3, con el mejor accuracy en prueba.
+
+
+#9 Al hacer la comparación entre modelos el que mejor eficacia y comportamiento tuvieron fueron los modelos de SVM y al igual fueron los más rápidos en procesarse.
+
