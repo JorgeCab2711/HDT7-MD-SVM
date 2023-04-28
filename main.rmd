@@ -364,7 +364,7 @@ resultadosP3 <- evaluarModelo(modeloSVM_P3, train, test)
 Para poder manejar el sobreajuste, se puede implementar la técnica de la validación cruzada la cual es utilizada para evaluar la capacidad predictiva de un modelo y seleccionar el mejor.  Se divide el conjunto de datos en múltiples subconjuntos de entrenamiento y prueba y se ajusta el modelo en cada subconjunto de entrenamiento y se evalúa en el subconjunto de prueba. Esto ayuda a identificar el sobreajuste y seleccionar el modelo que tenga el mejor rendimiento en el conjunto de prueba.
 
 
-#8. Compare los resultados obtenidos con los diferentes modelos que hizo en cuanto a
+#### 8. Compare los resultados obtenidos con los diferentes modelos que hizo en cuanto a
 efectividad, tiempo de procesamiento y equivocaciones (donde el algoritmo se equivocó
 más, donde se equivocó menos y la importancia que tienen los errores).
 
@@ -374,5 +374,94 @@ En los modelos radiales el mejor modelo fue el 3. el cual tenía mejor accuracy 
 Y por último en el modelo Polinomial el mejor modelo fue el 3, con el mejor accuracy en prueba.
 
 
-#9 Al hacer la comparación entre modelos el que mejor eficacia y comportamiento tuvieron fueron los modelos de SVM y al igual fueron los más rápidos en procesarse.
+##### 9 Al hacer la comparación entre modelos el que mejor eficacia y comportamiento tuvieron fueron los modelos de SVM y al igual fueron los más rápidos en procesarse.
+
+##### 10 Genere un buen modelo de regresión, use para esto la variable del precio de la casa directamente
+```{r}
+
+# Cargamos la biblioteca y el conjunto de datos
+library(MASS)
+data(Boston)
+
+# Creamos un modelo de regresión lineal utilizando la variable RM (promedio de habitaciones por vivienda)
+modelo_regresion <- lm(medv ~ rm, data = Boston)
+
+# Resumen del modelo
+summary(modelo_regresion)
+
+# Visualización de los datos y la línea de regresión
+plot(Boston$rm, Boston$medv, main = "Regresión lineal: Precio de la casa vs. Número de habitaciones",
+     xlab = "Número de habitaciones (RM)", ylab = "Precio de la casa (MEDV)", pch = 16)
+abline(modelo_regresion, col = "red")
+
+
+```
+
+
+
+
+# 11 Compare los resultados del modelo de regresión generado con los de hojas anteriores que utilicen la misma variable, como la de regresión lineal
+
+```{r}
+# Especificar un repositorio CRAN
+cran_repo <- "https://cloud.r-project.org/"
+
+# Instalar y cargar las bibliotecas necesarias
+install.packages(c("tidyverse", "caret", "Metrics"), repos = cran_repo)
+library(tidyverse)
+library(caret)
+library(Metrics)
+
+# Leer el archivo train.csv
+train_data <- read_csv("train.csv")
+
+# Dividir el conjunto de datos en entrenamiento y prueba
+set.seed(123)
+train_index <- createDataPartition(train_data$SalePrice, p = 0.8, list = FALSE)
+train_set <- train_data[train_index, ]
+test_set <- train_data[-train_index, ]
+
+# Modelo de regresión lineal simple utilizando GrLivArea
+modelo_simple <- lm(SalePrice ~ GrLivArea, data = train_set)
+
+# Modelo de regresión lineal múltiple con más variables
+modelo_multiple <- lm(SalePrice ~ GrLivArea + OverallQual + YearBuilt + LotArea + TotalBsmtSF, data = train_set)
+
+# Predecir los precios de venta en el conjunto de prueba
+predicciones_simple <- predict(modelo_simple, newdata = test_set)
+predicciones_multiple <- predict(modelo_multiple, newdata = test_set)
+
+# Calcular el RMSE para ambos modelos
+rmse_simple <- rmse(test_set$SalePrice, predicciones_simple)
+rmse_multiple <- rmse(test_set$SalePrice, predicciones_multiple)
+
+# Comparar los resultados
+cat("RMSE del modelo simple: ", rmse_simple, "\n")
+cat("RMSE del modelo múltiple: ", rmse_multiple, "\n")
+
+```
+
+# 12 Genere un informe de los resultados y las explicaciones
+
+
+
+###Resumen de los modelos:
+
+Modelo simple: Regresión lineal simple utilizando solo la variable GrLivArea para predecir SalePrice.
+Modelo múltiple: Regresión lineal múltiple utilizando las variables GrLivArea, OverallQual, YearBuilt, LotArea y TotalBsmtSF para predecir SalePrice.
+Resultados:
+
+RMSE del modelo simple: 62,153.54
+RMSE del modelo múltiple: 46,525.38
+
+
+### Análisis de los resultados:
+
+El modelo de regresión lineal simple utiliza solo la variable GrLivArea, que representa el área habitable por encima del nivel del suelo en pies cuadrados. Por otro lado, el modelo de regresión lineal múltiple utiliza cinco variables para predecir el precio de venta de una casa, incorporando información adicional sobre la calidad general, el año de construcción, el área del lote y el área del sótano total.
+
+El RMSE (Root Mean Squared Error) es una medida común de la precisión de un modelo de regresión. Cuanto menor sea el RMSE, mejor será el rendimiento del modelo en términos de precisión de las predicciones. En este caso, se puede observar que el RMSE del modelo múltiple es significativamente menor que el RMSE del modelo simple. Esto indica que el modelo múltiple es más preciso en sus predicciones que el modelo simple.
+
+####  Conclusiones:
+
+Basándonos en los resultados, podemos concluir que el modelo de regresión lineal múltiple con las cinco variables (GrLivArea, OverallQual, YearBuilt, LotArea y TotalBsmtSF) es más preciso para predecir el precio de venta de una casa en comparación con el modelo de regresión lineal simple que solo utiliza la variable GrLivArea. Esto sugiere que incluir más variables relevantes en el modelo puede mejorar su capacidad para predecir con precisión el precio de venta de una casa.
 
